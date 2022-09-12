@@ -1,4 +1,5 @@
 using ElectricityPriceWebApi.Models;
+using ElectricityPriceWebApi.NordPool;
 using ElectricityPriceWebApi.Repositories;
 using ElectricityPriceWebApi.Services;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddScoped<IElectricityPriceService, ElectricityPriceService>();
 builder.Services.AddScoped<IElectricityPriceRepository, ElectricityPriceRepository>();
+builder.Services.AddScoped<INordPoolClient, NordPoolClient>();
+
+builder.Services.AddHttpClient();
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ElectricityPriceContext>(x =>
