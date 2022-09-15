@@ -1,3 +1,4 @@
+using ElectricityPriceWebApi.Config.MappingProfiles;
 using ElectricityPriceWebApi.Models;
 using ElectricityPriceWebApi.NordPool;
 using ElectricityPriceWebApi.Repositories;
@@ -13,6 +14,9 @@ builder.Services.AddScoped<IElectricityPriceRepository, ElectricityPriceReposito
 builder.Services.AddScoped<INordPoolClient, NordPoolClient>();
 
 builder.Services.AddHttpClient();
+
+builder.Services.AddAutoMapper(typeof(Program));
+MappingProfile.InitializeAutoMapper();
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ElectricityPriceContext>(x =>

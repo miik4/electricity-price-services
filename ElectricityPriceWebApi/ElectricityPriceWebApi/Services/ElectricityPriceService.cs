@@ -1,25 +1,43 @@
-﻿using ElectricityPriceWebApi.Models;
+﻿using AutoMapper;
+using ElectricityPriceWebApi.Dto;
+using ElectricityPriceWebApi.Models;
 using ElectricityPriceWebApi.NordPool;
 using ElectricityPriceWebApi.Repositories;
 
-namespace ElectricityPriceWebApi.Services
+namespace ElectricityPriceWebApi.Services;
+
+public class ElectricityPriceService : IElectricityPriceService
 {
-    public class ElectricityPriceService : IElectricityPriceService
+    private readonly IElectricityPriceRepository repository;
+    private readonly INordPoolClient nordPoolClient;
+    private readonly IMapper mapper;
+
+    public ElectricityPriceService(IElectricityPriceRepository repository, INordPoolClient nordPoolClient,
+        IMapper mapper)
     {
-        private readonly IElectricityPriceRepository repository;
-        private readonly INordPoolClient nordPoolClient;
+        this.repository = repository;
+        this.nordPoolClient = nordPoolClient;
+        this.mapper = mapper;
+    }
 
-        public ElectricityPriceService(IElectricityPriceRepository repository, INordPoolClient nordPoolClient)
+    public async Task<List<ElectricityPriceDto>> GetDayAheadAndWeekPrices()
+    {
+        var prices =
+            mapper.Map<List<ElectricityPrice>, List<ElectricityPriceDto>>(await repository.GetDayAheadAndWeekPrices());
+
+        // We should return 8 day hourly price. If prices are found from database -> no need to update those and make unnecessary request to NordPool API
+        const int expectedPricesCount = 8 * 24;
+
+        if (prices.Count == expectedPricesCount)
         {
-            this.repository = repository;
-            this.nordPoolClient = nordPoolClient;
+            return prices;
         }
 
-        public async Task<IEnumerable<ElectricityPrice>> GetAll()
-        {
-            await nordPoolClient.GetFinlandDayAheadHourlyPrices();
+        // If any of prices is missing -> fetch prices from NordPool API and update to database
+        prices = await nordPoolClient.GetFinlandDayAheadHourlyPrices();
 
-            return await repository.GetAll();
-        }
+        await repository.UpdatePrices(prices);
+
+        return prices;
     }
 }

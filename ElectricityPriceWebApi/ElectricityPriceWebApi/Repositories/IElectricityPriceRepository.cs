@@ -1,8 +1,10 @@
-﻿using ElectricityPriceWebApi.Models;
+﻿using ElectricityPriceWebApi.Dto;
+using ElectricityPriceWebApi.Models;
 
 namespace ElectricityPriceWebApi.Repositories;
 
 public interface IElectricityPriceRepository
 {
-    Task<IEnumerable<ElectricityPrice>> GetAll();
+    Task<List<ElectricityPrice>> GetDayAheadAndWeekPrices();
+    Task UpdatePrices(List<ElectricityPriceDto> prices);
 }

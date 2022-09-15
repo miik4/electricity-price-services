@@ -17,9 +17,9 @@ namespace ElectricityPriceWebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ElectricityPrice>>> GetElectricityPrices()
+        public async Task<ActionResult<IEnumerable<ElectricityPrice>>> GetDayAheadAndWeekPrices()
         {
-            return new JsonResult(await electricityPriceService.GetAll());
+            return new JsonResult(await electricityPriceService.GetDayAheadAndWeekPrices());
         }
     }
 }

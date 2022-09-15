@@ -1,6 +1,8 @@
-﻿namespace ElectricityPriceWebApi.NordPool;
+﻿using ElectricityPriceWebApi.Dto;
+
+namespace ElectricityPriceWebApi.NordPool;
 
 public interface INordPoolClient
 {
-    Task GetFinlandDayAheadHourlyPrices();
+    Task<List<ElectricityPriceDto>> GetFinlandDayAheadHourlyPrices();
 }
