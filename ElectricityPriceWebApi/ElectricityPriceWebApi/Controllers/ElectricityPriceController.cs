@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ElectricityPriceWebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("electricity-price")]
     public class ElectricityPriceController : ControllerBase
     {
         private readonly IElectricityPriceService electricityPriceService;

@@ -4,7 +4,6 @@ using ElectricityPriceWebApi.NordPool;
 using ElectricityPriceWebApi.Repositories;
 using ElectricityPriceWebApi.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +34,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+#if DEBUG
+app.UseCors(x => x
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
+#endif
 
 app.UseAuthorization();
 
